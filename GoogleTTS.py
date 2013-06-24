@@ -66,10 +66,10 @@ def main():
                 args.output.write(response.read())
                 time.sleep(.5)
             except urllib2.HTTPError as e:
-                print '%s' % e
+                print ('%s' % e)
     args.output.close()
 
-    print 'Saved MP3 to %s' % args.output.name
+    print('Saved MP3 to %s' % args.output.name)
 
 if __name__ == "__main__":
     main()
