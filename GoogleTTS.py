@@ -19,7 +19,7 @@ def audio_extract(input_text='',args=None):
     if type(args) is dict:
         args = audio_args(
                     language=args.get('language','en'),
-                    output=open(args.get('filename','output.mp3'), 'w')
+                    output=open(args.get('output','output.mp3'), 'w')
         )
     #process input_text into chunks
     input_text = input_text.replace('\n', '')
