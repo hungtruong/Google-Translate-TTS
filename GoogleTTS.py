@@ -102,7 +102,7 @@ def audio_extract(input_text='',args=None):
                 response = urllib2.urlopen(req)
                 args.output.write(response.read())
                 time.sleep(.5)
-            except urllib2.HTTPError as e:
+            except urllib2.URLError as e:
                 print ('%s' % e)
     args.output.close()
     print('Saved MP3 to %s' % args.output.name)
