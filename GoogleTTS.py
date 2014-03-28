@@ -9,19 +9,12 @@ from collections import namedtuple
 
 audio_args = namedtuple('audio_args',['language','output'])
 
-def audio_extract(input_text='',args=None):
-    # This accepts :
-    #   a dict,
-    #   an audio_args named tuple
-    #   or arg parse object
-    if args is None:
-        args = audio_args(language='en',output=open('output.mp3', 'w'))
-    if type(args) is dict:
-        args = audio_args(
-                    language=args.get('language','en'),
-                    output=open(args.get('output','output.mp3'), 'w')
-        )
-    #process input_text into chunks
+def split_text(input_text, max_length=100):
+    """
+    Google TTS only accepts up to (and including) 100 characters long texts.
+    Split the text in chuncks of maximum 100 characters long.
+    Try to split between sentences to avoid interruptions mid-sentence.
+    """
     input_text = input_text.replace('\n', '')
     text_list = re.split('(\,|\.)', input_text)
     combined_text = []
@@ -30,7 +23,7 @@ def audio_extract(input_text='',args=None):
             combined_text.append(val)
         else:
             joined_text = ''.join((combined_text.pop(), val))
-            if len(joined_text) < 100:
+            if len(joined_text) <= max_length:
                 combined_text.append(joined_text)
             else:
                 subparts = re.split('( )', joined_text)
@@ -44,6 +37,22 @@ def audio_extract(input_text='',args=None):
                 #append final part
                 temp_array.append(temp_string)
                 combined_text.extend(temp_array)
+    return combined_text
+
+def audio_extract(input_text='',args=None):
+    # This accepts :
+    #   a dict,
+    #   an audio_args named tuple
+    #   or arg parse object
+    if args is None:
+        args = audio_args(language='en',output=open('output.mp3', 'w'))
+    if type(args) is dict:
+        args = audio_args(
+                    language=args.get('language','en'),
+                    output=open(args.get('output','output.mp3'), 'w')
+        )
+    #process input_text into chunks
+    combined_text = split_text(input_text)
     #download chunks and write them to the output file
     for idx, val in enumerate(combined_text):
         mp3url = "http://translate.google.com/translate_tts?tl=%s&q=%s&total=%s&idx=%s" % (
