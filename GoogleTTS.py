@@ -115,7 +115,7 @@ def text_to_speech_mp3_argparse():
     parser.add_argument('-o', '--output',
                         action='store', nargs='?',
                         help='Filename to output audio to',
-                        type=argparse.FileType('w'), default='out.mp3')
+                        type=argparse.FileType('wb'), default='out.mp3')
     parser.add_argument('-l', '--language',
                         action='store',
                         nargs='?',
